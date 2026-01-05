@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "671102599626",
+    "project_id": "e-commerce-15637",
+    "storage_bucket": "e-commerce-15637.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:671102599626:android:653bbb06235c4afd5d4f33",
+        "android_client_info": {
+          "package_name": "com.alaasohail.e_commerce"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5PNnfq24snk_ccwKUaAX-pTH_BM78BFY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
