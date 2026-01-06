@@ -146,7 +146,7 @@ class _ForgetpasswordState extends State<Forgetpassword> {
                       ),
                       onPressed: () {},
                       child: Text(
-                        "Login",
+                        "Confirm",
                         style: TextStyle(
                           fontFamily: Gordita,
                           fontSize: 18,
