@@ -100,9 +100,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                           child: Dropdownmenu(
                             items: ['S', 'M', 'L', 'XL', 'XXL'],
                             hint: 'Size',
-                            onChanged: (String? dropDownValue) {
+                            onChanged: (String? newValue) {
                               setState(() {
-                                dropDownValue = dropDownValue;
+                                dropDownValue = newValue!;
                               });
                             },
                           ),
