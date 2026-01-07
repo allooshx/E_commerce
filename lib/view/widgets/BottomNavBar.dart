@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
+import '../screens/BagScreen.dart';
+import '../screens/FavoriteScreen.dart';
 import '../screens/HomeScreen.dart';
 import '../screens/ProfileScreen.dart';
 import '../screens/ShopScreen.dart';
@@ -46,7 +48,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             ),
           ),
           PersistentTabConfig(
-            screen: Homescreen(),
+            screen: BagScreen(),
             item: ItemConfig(
               icon: Icon(Iconsax.bag_2_outline),
               title: "Bag",
@@ -54,7 +56,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             ),
           ),
           PersistentTabConfig(
-            screen: Homescreen(),
+            screen: FavoriteScreen(),
             item: ItemConfig(
               icon: Icon(Icons.favorite_outline_rounded),
               title: "Favorites",

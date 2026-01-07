@@ -1,7 +1,12 @@
+import 'package:ecommerce/models/constsOfDart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../controller/database_controller.dart';
+import '../../models/add_to_cart_model.dart';
 import '../widgets/Product.dart';
+import '../widgets/dropDownMenu.dart';
 
 class ProductDetails extends StatefulWidget {
   final Product product;
@@ -16,6 +21,25 @@ String Gordita = "Gordita";
 
 class _ProductDetailsState extends State<ProductDetails> {
   bool isfavorite = false;
+
+  late String dropDownValue;
+
+  Future<void> _addToCart() async {
+    final database = Provider.of<Database>(context);
+    try {
+      final add = AddToCartModel(
+        id: decumentIDFromLocalData(),
+        title: widget.product.title,
+        price: widget.product.price,
+        image: widget.product.image,
+        size: dropDownValue,
+        productId: widget.product.id,
+      );
+      await database.addToCart(add);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,38 +91,55 @@ class _ProductDetailsState extends State<ProductDetails> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: InkWell(
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      onTap: () {
-                        setState(() {
-                          isfavorite = !isfavorite;
-                        });
-                      },
-                      child: SizedBox(
-                        height: 50,
-                        width: 50,
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 60,
+                          child: Dropdownmenu(
+                            items: ['S', 'M', 'L', 'XL', 'XXL'],
+                            hint: 'Size',
+                            onChanged: (String? dropDownValue) {
+                              setState(() {
+                                dropDownValue = dropDownValue;
+                              });
+                            },
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(
-                              isfavorite
-                                  ? Icons.favorite
-                                  : Icons.favorite_border,
-                              color: Colors.redAccent,
-                              size: 30,
+                        ),
+                      ),
+                      Spacer(),
+                      InkWell(
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        onTap: () {
+                          setState(() {
+                            isfavorite = !isfavorite;
+                          });
+                        },
+                        child: SizedBox(
+                          height: 50,
+                          width: 50,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                isfavorite
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: Colors.redAccent,
+                                size: 30,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
                   SizedBox(height: 16),
                   Row(
@@ -169,7 +210,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                       minimumSize: Size(double.infinity, size.height * 0.07),
                       elevation: 1,
                     ),
-                    onPressed: () {},
+
+                    onPressed: () async {
+                      await _addToCart();
+                    },
                     child: Text(
                       "Add To Cart",
                       style: TextStyle(

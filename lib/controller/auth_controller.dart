@@ -1,12 +1,16 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ecommerce/controller/database_controller.dart';
 import 'package:flutter/material.dart';
 
+import '../models/constsOfDart.dart';
+import '../models/user_data.dart';
 import '../services/auth.dart';
 
 class AuthController with ChangeNotifier {
   final AuthBase auth;
   String email;
   String password;
+
+  Database database = FirestoreDatabase('123');
 
   AuthController({required this.auth, this.email = '', this.password = ''});
 
@@ -25,10 +29,12 @@ class AuthController with ChangeNotifier {
   Future<void> signup() async {
     try {
       await auth.signupWithEmailAndPassword(email, password);
+      await database.setUserData(UserData(uid: decumentIDFromLocalData(), email: email));
     } catch (e) {
       rethrow;
     }
   }
+
   Future<void> signOut() async {
     try {
       await auth.signOut();
@@ -36,6 +42,7 @@ class AuthController with ChangeNotifier {
       rethrow;
     }
   }
+
   void copyWith({String? email, String? password}) {
     this.email = email ?? this.email;
     this.password = password ?? this.password;
