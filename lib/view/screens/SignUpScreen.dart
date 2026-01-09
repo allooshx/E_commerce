@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -40,19 +41,55 @@ class _SignupscreenState extends State<Signupscreen> {
     super.initState();
   }
 
-  Future<void> _signup(AuthController model,context) async {
+  Future<void> _signup(AuthController model, context) async {
     try {
       await model.signup();
-     Navigator.of(context).pop();
+      Navigator.of(context).pop();
     } catch (e) {
+      // القيمة الافتراضية دائماً
+      String errorMessage = "Invalid Email or Password";
+
+      if (e is FirebaseAuthException) {
+        switch (e.code) {
+          case "invalid-email":
+            errorMessage = "Invalid Email";
+            break;
+          case "user-not-found":
+            errorMessage = "User not found";
+            break;
+          case "wrong-password":
+            errorMessage = "Wrong password";
+            break;
+          case "user-disabled":
+            errorMessage = "User has been disabled";
+            break;
+          case "email-already-in-use":
+            errorMessage = "Email already in use";
+            break;
+          case "weak-password":
+            errorMessage = "Weak password";
+            break;
+        }
+      }
+
       showDialog(
         context: context,
         builder: (_) => AlertDialog(
-          title: Text("Error"),
-          content: Text(
-            e.toString(),
+          backgroundColor: Colors.white,
+          title: const Text(
+            "Authentication Error",
             style: TextStyle(
-              fontFamily: Gordita,
+              fontFamily: "Gordita",
+              color: Colors.redAccent,
+              fontSize: 12,
+              letterSpacing: 1,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Text(
+            errorMessage,
+            style: const TextStyle(
+              fontFamily: "Gordita",
               color: Colors.black,
               fontSize: 16,
               letterSpacing: 1,
@@ -62,7 +99,15 @@ class _SignupscreenState extends State<Signupscreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text("ok"),
+              child: const Text(
+                "OK",
+                style: TextStyle(
+                  color: Colors.redAccent,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Gordita",
+                ),
+              ),
             ),
           ],
         ),
@@ -110,16 +155,31 @@ class _SignupscreenState extends State<Signupscreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               SizedBox(
-                                height: 60,
+                                height: 75,
                                 width: double.infinity,
                                 child: TextFormField(
                                   controller: _nameController,
+                                  focusNode: _nameFocusNode,
+                                  onEditingComplete: () => FocusScope.of(
+                                    context,
+                                  ).requestFocus(_emailFocusNode),
+                                  textInputAction: TextInputAction.next,
+                                  keyboardType: TextInputType.name,
                                   obscureText: false,
                                   textAlign: TextAlign.left,
                                   clipBehavior: Clip.antiAlias,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  onChanged: model.updateName,
                                   validator: (value) =>
-                                      value!.isEmpty ? "enter your name" : null,
+                                      value!.isEmpty ? "Enter your name" : null,
                                   decoration: InputDecoration(
+                                    isDense: true,
+                                    contentPadding: EdgeInsets.symmetric(
+                                      vertical: 16,
+                                      horizontal: 12,
+                                    ),
+
                                     fillColor: Colors.white,
                                     filled: true,
 
@@ -138,7 +198,7 @@ class _SignupscreenState extends State<Signupscreen> {
                                         ),
 
                                         child: Icon(
-                                          FontAwesome.user,
+                                          CupertinoIcons.person,
                                           size: 24,
                                           color: Colors.redAccent,
                                         ),
@@ -159,27 +219,42 @@ class _SignupscreenState extends State<Signupscreen> {
                                       color: Colors.black,
                                       backgroundColor: Colors.white,
                                     ),
-
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        width: 1,
+                                        color: Colors.red,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        width: 1,
+                                        color: Colors.red,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                     enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(15),
-                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(
+                                        width: 1,
+                                        color: Colors.transparent,
+                                      ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
-                                        width: 2,
+                                        width: 1,
                                         color: Colors.red,
                                       ),
-                                      borderRadius: BorderRadius.circular(15),
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
 
                                   enabled: true,
                                 ),
                               ),
-
                               SizedBox(height: 10),
                               SizedBox(
-                                height: 60,
+                                height: 75,
                                 width: double.infinity,
                                 child: TextFormField(
                                   controller: _emailController,
@@ -187,22 +262,37 @@ class _SignupscreenState extends State<Signupscreen> {
                                   textAlign: TextAlign.left,
                                   onChanged: model.updateEmail,
 
+                                  focusNode: _emailFocusNode,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  onEditingComplete: () => FocusScope.of(
+                                    context,
+                                  ).requestFocus(_passwordFocusNode),
+
+                                  textInputAction: TextInputAction.next,
+                                  keyboardType: TextInputType.emailAddress,
+
                                   validator: (value) {
                                     if (value!.isEmpty || value == null) {
-                                      return "enter your email";
+                                      return "Enter your email";
                                     }
                                     if (!RegExp(
                                       r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
                                     ).hasMatch(value)) {
-                                      return "enter valid email";
+                                      return "Enter correct email";
                                     }
 
                                     return null;
                                   },
                                   decoration: InputDecoration(
+                                    isDense: true,
+                                    contentPadding: EdgeInsets.symmetric(
+                                      vertical: 16,
+                                      horizontal: 12,
+                                    ),
+
                                     fillColor: Colors.white,
                                     filled: true,
-
                                     prefixIcon: Padding(
                                       padding: const EdgeInsets.all(5.0),
                                       child: Container(
@@ -239,17 +329,33 @@ class _SignupscreenState extends State<Signupscreen> {
                                       color: Colors.black,
                                       backgroundColor: Colors.white,
                                     ),
-
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        width: 1,
+                                        color: Colors.red,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        width: 1,
+                                        color: Colors.red,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                     enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(15),
-                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(
+                                        width: 1,
+                                        color: Colors.transparent,
+                                      ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
-                                        width: 2,
+                                        width: 1,
                                         color: Colors.red,
                                       ),
-                                      borderRadius: BorderRadius.circular(15),
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
 
@@ -257,24 +363,35 @@ class _SignupscreenState extends State<Signupscreen> {
                                 ),
                               ),
                               SizedBox(height: 10),
-
                               SizedBox(
-                                height: 60,
+                                height: 75,
                                 width: double.infinity,
                                 child: TextFormField(
                                   controller: _passwordController,
                                   obscureText: true,
                                   textAlign: TextAlign.left,
                                   onChanged: model.updatePassword,
+                                  focusNode: _passwordFocusNode,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  textInputAction: TextInputAction.next,
+                                  keyboardType: TextInputType.visiblePassword,
+
                                   validator: (value) {
                                     if (value!.isEmpty || value == null) {
-                                      return "enter your password";
+                                      return "Enter your password";
                                     }
                                     if (value.length < 8) {
-                                      return "password must be at least 8 characters";
+                                      return "Password must be at least 8 characters";
                                     }
                                   },
                                   decoration: InputDecoration(
+                                    isDense: true,
+                                    contentPadding: EdgeInsets.symmetric(
+                                      vertical: 16,
+                                      horizontal: 12,
+                                    ),
+
                                     fillColor: Colors.white,
                                     filled: true,
 
@@ -294,6 +411,7 @@ class _SignupscreenState extends State<Signupscreen> {
 
                                         child: Icon(
                                           OctIcons.lock,
+
                                           size: 24,
                                           color: Colors.redAccent,
                                         ),
@@ -312,24 +430,42 @@ class _SignupscreenState extends State<Signupscreen> {
                                       fontSize: 18,
                                       fontWeight: FontWeight.w400,
                                       color: Colors.black,
+                                      backgroundColor: Colors.white,
                                     ),
-
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        width: 1,
+                                        color: Colors.red,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        width: 1,
+                                        color: Colors.red,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                     enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(15),
-                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(
+                                        width: 1,
+                                        color: Colors.transparent,
+                                      ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
-                                        width: 2,
+                                        width: 1,
                                         color: Colors.red,
                                       ),
-                                      borderRadius: BorderRadius.circular(15),
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
 
                                   enabled: true,
                                 ),
                               ),
+
                               SizedBox(height: 20),
                               Row(
                                 children: [
@@ -338,8 +474,10 @@ class _SignupscreenState extends State<Signupscreen> {
                                     child: MSHCheckbox(
                                       size: 25,
                                       value: isChecked,
+
                                       colorConfig:
                                           MSHColorConfig.fromCheckedUncheckedDisabled(
+                                            uncheckedColor: Colors.grey,
                                             checkedColor: Colors.redAccent,
                                           ),
                                       style: MSHCheckboxStyle.stroke,
@@ -382,7 +520,11 @@ class _SignupscreenState extends State<Signupscreen> {
                             onPressed: () {
                               if (_formKey.currentState!.validate() &&
                                   isChecked == true) {
-                                _signup(model,context);
+                                _signup(model, context);
+                              } else {
+                                print(
+                                  "You Need to Accept terms and conditions",
+                                );
                               }
                             },
                             child: Text(
@@ -478,7 +620,7 @@ class _SignupscreenState extends State<Signupscreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "Already have an account?",
+                              "Already have an account? ",
                               style: TextStyle(
                                 fontFamily: Gordita,
                                 color: Colors.grey,

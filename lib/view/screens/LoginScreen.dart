@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:provider/provider.dart';
@@ -37,15 +38,43 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _submit(AuthController model) async {
     try {
       await model.submit();
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      switch (e.code) {
+        case "invalid-email":
+          errorMessage = "Invalid Email";
+          break;
+        case "user-not-found":
+          errorMessage = "User not found";
+          break;
+        case "wrong-password":
+          errorMessage = "Wrong password";
+          break;
+        case "user-disabled":
+          errorMessage = "This user has been disabled";
+          break;
+        default:
+          errorMessage = "Email Or Password is incorrect";
+      }
+
       showDialog(
         context: context,
         builder: (_) => AlertDialog(
-          title: Text("Error"),
-          content: Text(
-            e.toString(),
+          backgroundColor: Colors.white,
+          title: const Text(
+            "Authentication Error",
             style: TextStyle(
-              fontFamily: Gordita,
+              fontFamily: "Gordita",
+              color: Colors.redAccent,
+              fontSize: 12,
+              letterSpacing: 1,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Text(
+            errorMessage,
+            style: const TextStyle(
+              fontFamily: "Gordita",
               color: Colors.black,
               fontSize: 16,
               letterSpacing: 1,
@@ -55,7 +84,38 @@ class _LoginScreenState extends State<LoginScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text("ok"),
+              child: const Text(
+                "OK",
+                style: TextStyle(
+                  color: Colors.redAccent,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Gordita",
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      // أي خطأ آخر غير Firebase
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text("Error"),
+          content: Text(
+            e.toString(),
+            style: const TextStyle(
+              fontFamily: "Gordita",
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("OK"),
             ),
           ],
         ),
@@ -116,15 +176,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                 onChanged: model.updateEmail,
 
                                 validator: (value) {
-                                  if (value!.isEmpty || value == null)
-                                    return "enter your email";
+                                  if (value!.isEmpty || value == null) {
+                                    return "Enter your email";
+                                  }
                                   if (!RegExp(
                                     r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                                  ).hasMatch(value))
-                                    return "enter valid email";
+                                  ).hasMatch(value)) {
+                                    return "Enter valid email";
+                                  }
 
                                   return null;
                                 },
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+
                                 decoration: InputDecoration(
                                   contentPadding: EdgeInsets.symmetric(
                                     vertical: 16,
@@ -170,14 +235,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   focusedErrorBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      width: 2,
+                                      width: 1,
                                       color: Colors.red,
                                     ),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   errorBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      width: 2,
+                                      width: 1,
                                       color: Colors.red,
                                     ),
                                     borderRadius: BorderRadius.circular(10),
@@ -188,7 +253,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      width: 2,
+                                      width: 1,
                                       color: Colors.red,
                                     ),
                                     borderRadius: BorderRadius.circular(10),
@@ -206,14 +271,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                 controller: _passwordController,
                                 focusNode: _passwordFocusNode,
                                 obscureText: true,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
                                 textAlign: TextAlign.left,
                                 onChanged: model.updatePassword,
                                 validator: (value) {
                                   if (value!.isEmpty || value == null) {
-                                    return "enter your password";
+                                    return "Enter your password";
                                   }
                                   if (value.length < 8) {
-                                    return "password must be at least 8 characters";
+                                    return "Password must be at least 8 characters";
                                   }
                                   return null;
                                 },
@@ -257,7 +324,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   focusedErrorBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      width: 2,
+                                      width: 1,
                                       color: Colors.red,
                                     ),
                                     borderRadius: BorderRadius.circular(10),
@@ -265,7 +332,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                   errorBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      width: 2,
+                                      width: 1,
                                       color: Colors.red,
                                     ),
                                     borderRadius: BorderRadius.circular(10),
@@ -276,7 +343,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      width: 2,
+                                      width: 1,
                                       color: Colors.red,
                                     ),
                                     borderRadius: BorderRadius.circular(10),
@@ -342,7 +409,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 100),
+                      SizedBox(height: 80),
 
                       Row(
                         children: [
@@ -385,7 +452,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             icon: Icon(
                               Bootstrap.facebook,
                               color: Colors.blue,
-                              size: 32,
+                              size: 40,
                             ),
 
                             style: IconButton.styleFrom(
@@ -400,7 +467,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             icon: Icon(
                               Bootstrap.apple,
                               color: Colors.black,
-                              size: 32,
+                              size: 40,
                             ),
                             style: IconButton.styleFrom(
                               backgroundColor: Colors.transparent,
@@ -415,7 +482,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             icon: Icon(
                               Bootstrap.google,
                               color: Colors.red,
-                              size: 32,
+                              size: 40,
                             ),
                             style: IconButton.styleFrom(
                               backgroundColor: Colors.transparent,
@@ -425,12 +492,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           Spacer(),
                         ],
                       ),
-                      SizedBox(height: 48),
+                      SizedBox(height: 34),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Don't have an account?",
+                            "Don't have an account? ",
                             style: TextStyle(
                               fontFamily: Gordita,
                               color: Colors.grey,

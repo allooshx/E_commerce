@@ -5,7 +5,7 @@ class AddToCartModel {
   final int price;
   final String image;
   final int discountValue;
-  final int quantity;
+  int quantity;
   final String color;
   final String size;
 
@@ -16,7 +16,7 @@ class AddToCartModel {
     required this.image,
     this.discountValue = 0,
     this.quantity = 1,
-    this.color = "Black",
+    required this.color,
     required this.size,
     required this.productId,
   });

@@ -37,7 +37,6 @@ class Auth implements AuthBase {
   }
 
   @override
-  // TODO: implement currentUser
   User? get currentUser => _firebaseAuth.currentUser;
 
   @override

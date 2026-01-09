@@ -20,8 +20,6 @@ class _DropdownmenuState extends State<Dropdownmenu> {
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
       elevation: 16,
-
-
       isExpanded: true,
       borderRadius: BorderRadius.circular(10),
       icon: Icon(CupertinoIcons.chevron_down),
@@ -51,36 +49,6 @@ class _DropdownmenuState extends State<Dropdownmenu> {
       }).toList(),
       onChanged: widget.onChanged,
     );
-    //   DropdownButton<String>(
-    //   // menuWidth: double.infinity,
-    //
-    //   iconSize: 20,
-    //   padding: EdgeInsets.symmetric(horizontal: 10),
-    //   borderRadius: BorderRadius.circular(10),
-    //   value: null,
-    //   hint: Text("Size"),
-    //   icon: Padding(
-    //     padding: const EdgeInsets.only(left: 60.0),
-    //     child: Icon(CupertinoIcons.chevron_down),
-    //   ),
-    //
-    //   style: TextStyle(
-    //     color: Colors.black,
-    //     fontFamily: "Gordita",
-    //     fontSize: 16,
-    //   ),
-    //   underline: Container(color: Colors.transparent),
-    //   onChanged: (String? newValue) {
-    //     setState(() {
-    //       dropDownValue = newValue!;
-    //     });
-    //   },
-    //
-    //   items: <String>["S", "M", "L", "XL", "XXL"]
-    //       .map<DropdownMenuItem<String>>((String value) {
-    //         return DropdownMenuItem<String>(value: value, child: Text(value));
-    //       })
-    //       .toList(),
-    // );
+
   }
 }

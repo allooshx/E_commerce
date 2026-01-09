@@ -9,14 +9,17 @@ class AuthController with ChangeNotifier {
   final AuthBase auth;
   String email;
   String password;
+  String name;
 
   Database database = FirestoreDatabase('123');
 
-  AuthController({required this.auth, this.email = '', this.password = ''});
+  AuthController({required this.auth, this.email = '', this.password = '',this.name=''});
 
   void updateEmail(String email) => copyWith(email: email);
 
   void updatePassword(String password) => copyWith(password: password);
+
+  void updateName(String name)=> copyWith(name: name);
 
   Future<void> submit() async {
     try {
@@ -28,8 +31,10 @@ class AuthController with ChangeNotifier {
 
   Future<void> signup() async {
     try {
-      await auth.signupWithEmailAndPassword(email, password);
-      await database.setUserData(UserData(uid: decumentIDFromLocalData(), email: email));
+      final user = await auth.signupWithEmailAndPassword(email, password);
+      await database.setUserData(
+        UserData(uid: user?.uid ?? decumentIDFromLocalData(), email: email, name: name, phone: '', image: '', gender: ''),
+      );
     } catch (e) {
       rethrow;
     }
@@ -43,9 +48,10 @@ class AuthController with ChangeNotifier {
     }
   }
 
-  void copyWith({String? email, String? password}) {
+  void copyWith({String? email, String? password,String? name,}) {
     this.email = email ?? this.email;
     this.password = password ?? this.password;
+    this.name = name ?? this.name;
     notifyListeners();
   }
 }

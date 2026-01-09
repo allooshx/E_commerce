@@ -27,7 +27,8 @@ class _ForgetpasswordState extends State<Forgetpassword> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(      backgroundColor: Color(0xFFF9F9F9),
+    return Scaffold(
+      backgroundColor: Color(0xFFF9F9F9),
 
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -72,16 +73,32 @@ class _ForgetpasswordState extends State<Forgetpassword> {
                   SizedBox(height: 20),
 
                   SizedBox(
-                    height: 60,
+                    height: 75,
                     width: double.infinity,
                     child: TextFormField(
                       controller: _emailController,
+
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.emailAddress,
                       obscureText: false,
                       textAlign: TextAlign.left,
-                      validator: (value) =>
-                          value!.isEmpty ? "enter your password" : null,
 
+                      validator: (value) {
+                        if (value!.isEmpty || value == null)
+                          return "enter your email";
+                        if (!RegExp(
+                          r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                        ).hasMatch(value))
+                          return "enter valid email";
+
+                        return null;
+                      },
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 16,
+                          horizontal: 12,
+                        ),
+
                         fillColor: Colors.white,
                         filled: true,
 
@@ -117,14 +134,21 @@ class _ForgetpasswordState extends State<Forgetpassword> {
                           color: Colors.black,
                           backgroundColor: Colors.white,
                         ),
-
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(width: 1, color: Colors.red),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(width: 1, color: Colors.red),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(width: 2, color: Colors.red),
-                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(width: 1, color: Colors.red),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
 

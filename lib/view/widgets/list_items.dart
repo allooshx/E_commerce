@@ -14,7 +14,7 @@ class ListItemsHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.of(context, rootNavigator: true).push(
+      onTap: () => Navigator.of(context).push(
         MaterialPageRoute(builder: (_) => ProductDetails(product: product)),
       ),
       child: DecoratedBox(

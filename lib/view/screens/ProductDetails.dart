@@ -22,18 +22,20 @@ String Gordita = "Gordita";
 class _ProductDetailsState extends State<ProductDetails> {
   bool isfavorite = false;
 
-  late String dropDownValue;
+  late String dropDownSize;
+  late String dropDownColor;
 
   Future<void> _addToCart() async {
-    final database = Provider.of<Database>(context);
+    final database = Provider.of<Database>(context, listen: false);
     try {
       final add = AddToCartModel(
         id: decumentIDFromLocalData(),
         title: widget.product.title,
         price: widget.product.price,
         image: widget.product.image,
-        size: dropDownValue,
+        size: dropDownSize,
         productId: widget.product.id,
+        color: dropDownColor,
       );
       await database.addToCart(add);
     } catch (e) {
@@ -102,17 +104,44 @@ class _ProductDetailsState extends State<ProductDetails> {
                             hint: 'Size',
                             onChanged: (String? newValue) {
                               setState(() {
-                                dropDownValue = newValue!;
+                                dropDownSize = newValue!;
                               });
                             },
                           ),
                         ),
                       ),
-                      Spacer(),
+                      SizedBox(width: 14),
+
+                      Expanded(
+                        child: SizedBox(
+                          height: 60,
+                          child: Dropdownmenu(
+                            items: [
+                              'Black',
+                              'White',
+                              'Red',
+                              'Blue',
+                              'Green',
+                              'Yellow',
+                              'Orange',
+                              'Brown',
+                            ],
+                            hint: 'Color',
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                dropDownColor = newValue!;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 14),
+
                       InkWell(
                         highlightColor: Colors.transparent,
                         splashColor: Colors.transparent,
                         hoverColor: Colors.transparent,
+
                         onTap: () {
                           setState(() {
                             isfavorite = !isfavorite;
@@ -125,6 +154,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.3),
+                                  spreadRadius: 1,
+                                  blurRadius: 10,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),

@@ -30,7 +30,6 @@ Future<void> _logout(AuthController model, context) async {
 class _ProfilescreenState extends State<Profilescreen> {
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final auth = Provider.of<AuthBase>(context);
     return ChangeNotifierProvider<AuthController>(
       create: (_) => AuthController(auth: auth),
@@ -73,16 +72,15 @@ class _ProfilescreenState extends State<Profilescreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Alaa Amer",
-                                  // auth.currentUser!.displayName!,
-                                  // model.email,
+                                  "S",
                                   style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
+                                    color: Colors.black,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
-                                 Text(
+                                Text(
                                   auth.currentUser!.email!,
                                   style: TextStyle(
                                     fontSize: 14,

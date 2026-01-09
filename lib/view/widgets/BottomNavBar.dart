@@ -24,6 +24,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
     return Scaffold(
       backgroundColor: Color(0xFFF9F9F9),
       body: PersistentTabView(
+        screenTransitionAnimation: ScreenTransitionAnimation(
+          curve: Curves.easeInOutCubic,
+
+          duration: Duration(milliseconds: 300),
+        ),
         controller: _bottomNavBarController,
         backgroundColor: Colors.white,
         handleAndroidBackButtonPress: true,
