@@ -53,6 +53,27 @@ class _LoginScreenState extends State<LoginScreen> {
         case "user-disabled":
           errorMessage = "This user has been disabled";
           break;
+        case "too-many-requests":
+          errorMessage = "Too many requests";
+          break;
+        case "operation-not-allowed":
+          errorMessage = "Operation not allowed";
+          break;
+        case "email-already-in-use":
+          errorMessage = "Email already in use";
+          break;
+        case "network-request-failed":
+          errorMessage = "Network request failed";
+          break;
+        case "weak-password":
+          errorMessage = "Weak password";
+          break;
+        case "requires-recent-login":
+          errorMessage = "Requires recent login";
+          break;
+        case "invalid-credential":
+          errorMessage = "Invalid credential";
+          break;
         default:
           errorMessage = "Email Or Password is incorrect";
       }

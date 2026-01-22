@@ -1,10 +1,10 @@
-
 import 'package:ecommerce/controller/database_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/add_to_cart_model.dart';
 import '../widgets/cardItemsCart.dart';
+import 'checkOut/CheckOutScreen.dart';
 
 class BagScreen extends StatefulWidget {
   const BagScreen({super.key});
@@ -17,6 +17,20 @@ String Gordita = "Gordita";
 
 class _BagScreenState extends State<BagScreen> {
   int totalAmount = 0;
+
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    final myproducts = await Provider.of<Database>(
+      context,
+      listen: false,
+    ).myProductsCartStream().first;
+    myproducts.forEach((element) {
+      setState(() {
+        totalAmount += element.price;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +77,7 @@ class _BagScreenState extends State<BagScreen> {
                       if (cartItems != null && cartItems.isNotEmpty)
                         ListView.builder(
                           itemBuilder: (BuildContext context, int i) {
-                            final cartItem = cartItems[i];
+                            // final cartItem = cartItems[i];
 
                             return Carditemscart(cartItem: cartItems[i]);
                           },
@@ -95,7 +109,14 @@ class _BagScreenState extends State<BagScreen> {
                       ),
                       SizedBox(height: 32),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const Checkoutscreen(),
+                            ),
+                          );
+
+                        },
 
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size(double.infinity, 50),

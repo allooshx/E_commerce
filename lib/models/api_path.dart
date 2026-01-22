@@ -3,5 +3,7 @@ class ApiPath {
   static String users(String uid) => 'users/$uid';
   static String addToCart(String uid,String addToCartID)=>"users/$uid/cart/$addToCartID";
   static String myProductsCart(String uid)=>"users/$uid/cart/";
+  static String deliveryMethods() => 'deliveryMethods/';
+
 
 }

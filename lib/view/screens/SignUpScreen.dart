@@ -46,9 +46,7 @@ class _SignupscreenState extends State<Signupscreen> {
       await model.signup();
       Navigator.of(context).pop();
     } catch (e) {
-      // القيمة الافتراضية دائماً
       String errorMessage = "Invalid Email or Password";
-
       if (e is FirebaseAuthException) {
         switch (e.code) {
           case "invalid-email":
@@ -68,6 +66,21 @@ class _SignupscreenState extends State<Signupscreen> {
             break;
           case "weak-password":
             errorMessage = "Weak password";
+            break;
+          case "too-many-requests":
+            errorMessage = "Too many requests";
+            break;
+          case "operation-not-allowed":
+            errorMessage = "Operation not allowed";
+            break;
+          case "network-request-failed":
+            errorMessage = "Network request failed";
+            break;
+          case "requires-recent-login":
+            errorMessage = "Requires recent login";
+            break;
+          case "invalid-credential":
+            errorMessage = "Invalid credential";
             break;
         }
       }

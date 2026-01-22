@@ -46,26 +46,25 @@ class _SplashScreenState extends State<SplashScreen> {
               child: BottomNavBar(),
             ),
           );
-        }
-
-        return Scaffold(
-          backgroundColor: Color(0xFFF9F9F9),
-
-          body: Center(
-            child: Column(
-              children: [
-                Spacer(),
-                Brand(Brands.shopee, size: 150),
-                Spacer(),
-                LoadingAnimationWidget.discreteCircle(
-                  color: Colors.red,
-                  size: 70,
-                ),
-                Spacer(),
-              ],
+        } else {
+          return Scaffold(
+            backgroundColor: Color(0xFFF9F9F9),
+            body: Center(
+              child: Column(
+                children: [
+                  Spacer(),
+                  Brand(Brands.shopee, size: 150),
+                  Spacer(),
+                  LoadingAnimationWidget.discreteCircle(
+                    color: Colors.red,
+                    size: 70,
+                  ),
+                  Spacer(),
+                ],
+              ),
             ),
-          ),
-        );
+          );
+        }
       },
     );
   }

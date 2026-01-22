@@ -16,24 +16,24 @@ class UserData {
   });
 
   Map<String, dynamic> toMap() {
-    final result = <String, dynamic>{};
-    result.addAll({"uid": uid});
-    result.addAll({"email": email});
-    result.addAll({"name": name});
-    result.addAll({"phone": phone});
-    result.addAll({"image": image});
-    result.addAll({"gender": gender});
-    return result;
+    return {
+      "uid": uid,
+      "email": email,
+      "name": name,
+      "phone": phone,
+      "image": image,
+      "gender": gender,
+    };
   }
 
   factory UserData.fromMap(Map<String, dynamic> map, String documentId) {
     return UserData(
       uid: documentId,
-      email: map['email'] ?? '',
-      name: map['name'] ?? '',
-      phone: map['phone'] ?? '',
-      image: map['image'] ?? '',
-      gender: map['gender'] ?? '',
+      email: map['email'] as String,
+      name: map['name'] as String,
+      phone: map['phone'] as String,
+      image: map['image'] as String,
+      gender: map['gender'] as String,
     );
   }
 }
